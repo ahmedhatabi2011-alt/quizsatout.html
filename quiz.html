@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Familie-Satout Quiz</title>
+    <style>
+        body {
+            background-color: red; /* 🔴 Hintergrund */
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        #frage {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            width: 250px;
+            background: white;
+            color: black;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+        }
+
+        .option.correct {
+            background-color: #39ff14; /* Grün */
+            color: black;
+        }
+
+        .option.wrong {
+            background-color: #ff3c3c; /* Rot */
+            color: black;
+        }
+
+        .weiter-btn {
+            background-color: #39ff14; /* 🟢 Neon-Grün */
+            color: black;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.2s;
+        }
+
+        .weiter-btn:hover {
+            box-shadow: 0 0 20px #39ff14;
+        }
+    </style>
+</head>
+<body>
+    <h1>Familie-Satout Quiz</h1>
+    <div id="quiz">
+        <div id="frage">Frage wird geladen...</div>
+        <div id="optionen"></div>
+        <button class="weiter-btn" id="weiter" disabled>Weiter</button>
+    </div>
+
+    <script>
+        const fragen = [
+            {
+                "frage": "Wer hat einen eigenen Laden in der Familie Satout?",
+                "optionen": ["A) Mohammed", "B) Fatin", "C) Reham", "D) Omar"],
+                "antwort": "D"
+            },
+            {
+                "frage": "Wer kocht am besten in der Familie Satout?",
+                "optionen": ["A) Fatin", "B) Reham", "C) Mohammed", "D) Omar"],
+                "antwort": "A"
+            },
+            {
+                "frage": "Wie viele Geschwister hat Omar?",
+                "optionen": ["A) 10", "B) 8", "C) 4", "D) 12"],
+                "antwort": "C"
+            },
+            {
+                "frage": "Wer ist der älteste von den Geschwistern?",
+                "optionen": ["A) reham", "B) omar", "C) mohammed", "D) israa"],
+                "antwort": "A"
+            }
+        ];
+
+        let index = 0;
+        let richtig = 0;
+        let falsch = 0;
+
+        function zeigeFrage() {
+            const frage = fragen[index];
+            document.getElementById("frage").textContent = frage.frage;
+
+            const optDiv = document.getElementById("optionen");
+            optDiv.innerHTML = "";
+
+            frage.optionen.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.textContent = opt;
+                btn.className = "option";
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll(".option").forEach(b => b.disabled = true);
+
+                    const buchstabe = opt.charAt(0);
+                    if (buchstabe === frage.antwort) {
+                        btn.classList.add("correct");
+                        richtig++;
+                    } else {
+                        btn.classList.add("wrong");
+                        falsch++;
+                        document.querySelectorAll(".option").forEach(b => {
+                            if (b.textContent.charAt(0) === frage.antwort) {
+                                b.classList.add("correct");
+                            }
+                        });
+                    }
+
+                    document.getElementById("weiter").disabled = false;
+                });
+                optDiv.appendChild(btn);
+            });
+
+            document.getElementById("weiter").disabled = true;
+        }
+
+        document.getElementById("weiter").addEventListener("click", () => {
+            index++;
+            if (index >= fragen.length) {
+                document.getElementById("quiz").innerHTML = 
+                    `<h1>🎉 Quiz beendet!</h1>
+                     <p>Richtig: ${richtig}</p>
+                     <p>Falsch: ${falsch}</p>`;
+                return;
+            }
+            zeigeFrage();
+        });
+
+        zeigeFrage();
+    </script>
+</body>
+</html>
